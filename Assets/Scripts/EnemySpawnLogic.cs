@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,29 +8,49 @@ using UnityEngine;
 
 namespace Assets.Scripts
 {
-    
+
     public class EnemySpawnLogic : EnemyWaveController
     {
         public GameObject _enemy;
+        private GameObject[] spawners, enemies;
+        private Vector3 _playerPos;
+        private bool _spawnActive = true;
+        private Vector3 _toPlayerVelocity;
+        private static GameState GameState;
+
+        private void Start()
+        {
+            GameState = GameState.instance;
+            _playerPos = GameObject.FindGameObjectWithTag("Player").transform.position;
+            enemies = GameObject.FindGameObjectsWithTag("Enemy");
+            foreach(var enemy in enemies) Destroy(enemy);
+            spawners = GameObject.FindGameObjectsWithTag("Spawner");
+        }
 
         private async void Update()
         {
-            await Spawn();
+            if (_spawnActive && GameState.State == GameStateType.PLAY)
+                await Spawn();
         }
 
         private async Task Spawn()
         {
+            _spawnActive = false;
+            var spawnerChoice = UnityEngine.Random.Range(0, spawners.Length);
             await Task.Delay(TimeSpan.FromSeconds(1.0 / SPAWN_RATE));
-            Instantiate(_enemy);
-            await AttackBase(_enemy);
+            _toPlayerVelocity = CalculateVelocity(spawners[spawnerChoice].gameObject);
+            var enemy = Instantiate(_enemy, spawners[spawnerChoice].gameObject.transform);
+            AttackBase(enemy);
+            _spawnActive = true;
         }
-
-        private async Task AttackBase(GameObject enemy)
+        private Vector3 CalculateVelocity(GameObject spawner)
         {
-            while(enemy.transform.position != Vector3.zero)
-            {
-                enemy.transform.Translate(Vector3.zero);
-            }
+            var vel = new Vector3(-spawner.transform.position.x, -spawner.transform.position.y, 0).normalized;
+            return vel;
+        }
+        private void AttackBase(GameObject enemy)
+        {
+            enemy.GetComponent<Rigidbody2D>().velocity = _toPlayerVelocity*MOVEMENT_SPEED;
         }
     }
 }

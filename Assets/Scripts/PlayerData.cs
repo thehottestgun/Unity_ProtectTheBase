@@ -2,12 +2,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [Serializable]
 public class PlayerData
 {
     public int health, maxHealth, healthCap;
     public int armour, maxArmour;
+    
     private static PlayerData _instance;
     public static PlayerData instance
     {
@@ -24,10 +26,17 @@ public class PlayerData
 
     private void NewPlayerData()
     {
-        this.health = 3;
-        this.maxHealth = 3;
-        this.healthCap = 7;
+        this.health = 50;
+        this.maxHealth = 50;
+        this.healthCap = 200;
         this.armour = 0;
-        this.maxArmour = 2;
+        this.maxArmour = 25;
+    }
+
+    public void TakeDamage(int damage)
+    {
+        this.health -= damage;
+        if (this.health <= 0) SceneManager.LoadScene(0);
+        Debug.Log(this.health);
     }
 }

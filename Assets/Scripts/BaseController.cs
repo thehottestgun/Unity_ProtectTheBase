@@ -39,4 +39,14 @@ public class BaseController : MonoBehaviour
         if (direction == 0) return;
         this._rb.rotation += direction * ROTATE_SPEED * -1;
     }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        Debug.Log("Collided");
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            _pd.TakeDamage(3);
+            Destroy(collision.gameObject);
+        }
+    }
 }
