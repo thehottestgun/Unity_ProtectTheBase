@@ -8,6 +8,9 @@ namespace Assets.Scripts
 {
     public class GameState
     {
+        public delegate void OnGameOver();
+        public static event OnGameOver onGameOver;
+
         private static GameState _instance;
         public GameStateType State;
         public static GameState instance
@@ -24,7 +27,14 @@ namespace Assets.Scripts
 
         private void NewGameState()
         {
-            this.State = GameStateType.PLAY;
+            UnityEngine.Time.timeScale = 0;
+            this.State = GameStateType.STOP;
+        }
+        public void Reset()
+        {
+            onGameOver?.Invoke();
+            UnityEngine.Time.timeScale = 0;
+            this.State = GameStateType.STOP;
         }
     }
 

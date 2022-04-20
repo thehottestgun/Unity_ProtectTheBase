@@ -22,9 +22,15 @@ namespace Assets.Scripts
         {
             GameState = GameState.instance;
             _playerPos = GameObject.FindGameObjectWithTag("Player").transform.position;
-            enemies = GameObject.FindGameObjectsWithTag("Enemy");
-            foreach(var enemy in enemies) Destroy(enemy);
+            GameState.onGameOver += ClearEnemies;
+            ClearEnemies();
             spawners = GameObject.FindGameObjectsWithTag("Spawner");
+        }
+
+        void ClearEnemies()
+        {
+            enemies = GameObject.FindGameObjectsWithTag("Enemy");
+            foreach (var enemy in enemies) Destroy(enemy);
         }
 
         private async void Update()

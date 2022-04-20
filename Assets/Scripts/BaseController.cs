@@ -43,22 +43,11 @@ public class BaseController : MonoBehaviour
         this._rb.rotation += direction * ROTATE_SPEED * -1;
     }
 
-    void ChangeHealthCount()
-    {
-        _HealthUI.text = _pd.health.ToString();
-        if (_pd.health < (_pd.maxHealth * 0.3f))
-            _HealthUI.color = Color.red;
-        else if (_pd.health < (_pd.maxHealth * 0.6f))
-            _HealthUI.color = Color.yellow;
-    }
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("Collided");
         if (collision.gameObject.CompareTag("Enemy"))
         {
             _pd.TakeDamage(3);
-            //ChangeHealthCount();
             Destroy(collision.gameObject);
         }
     }

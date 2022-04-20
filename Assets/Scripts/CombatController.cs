@@ -41,7 +41,6 @@ namespace Assets.Scripts
             float modifier = 0f;
             Vector3 res = Vector3.zero;
             float rotation = _parentRb.rotation >= 0 ? _parentRb.rotation : (360 - (_parentRb.rotation * -1));
-            Debug.Log(rotation);
             switch(quarter)
             {
                 case 1:

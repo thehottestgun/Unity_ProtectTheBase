@@ -10,6 +10,7 @@ public class PlayerData
 {
     public delegate void OnHealthChange(int maxHealth,int health);
     public delegate void OnScoreChange(int score);
+    
     public static event OnHealthChange onHealthChange;
     public static event OnScoreChange onScoreChange;
 
@@ -44,14 +45,18 @@ public class PlayerData
     {
         this.health -= damage;
         onHealthChange?.Invoke(this.maxHealth,this.health);
-        /*_controller.ChangeHealth(this.maxHealth,this.health);*/
-        if (this.health <= 0) SceneManager.LoadScene(0);
+        if (this.health <= 0)
+        {
+            this.NewPlayerData();
+            onScoreChange?.Invoke(this.score);
+            onHealthChange?.Invoke(this.maxHealth, this.health);
+            GameState.instance.Reset();
+        }
         
     }
     public void AddScore()
     {
         this.score += 1;
         onScoreChange?.Invoke(this.score);
-       /*_controller.ChangeScore(this.score);*/
     }
 }

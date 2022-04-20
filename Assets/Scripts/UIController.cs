@@ -10,22 +10,37 @@ namespace Assets.Scripts
     public class UIController : MonoBehaviour
     {
         private TMPro.TextMeshProUGUI _HealthUI, _ScoreUI;
+        private GameObject _StatsUI, _StartUI, _PauseUI;
 
 
         private void OnEnable()
         {
             PlayerData.onHealthChange += ChangeHealth;
             PlayerData.onScoreChange += ChangeScore;
+            GameState.onGameOver += PauseUIChange;
         }
 
         void Start()
         {
-            _HealthUI = GameObject.Find("UI").transform.GetChild(0).GetChild(1).GetComponent<TMPro.TextMeshProUGUI>();
-            _ScoreUI = GameObject.Find("UI").transform.GetChild(0).GetChild(3).GetComponent<TMPro.TextMeshProUGUI>();
+            _StatsUI = GameObject.Find("UI").transform.GetChild(0).gameObject;
+            _StartUI = GameObject.Find("UI").transform.GetChild(1).gameObject;
+            _HealthUI = _StatsUI.transform.GetChild(1).GetComponent<TMPro.TextMeshProUGUI>();
+            _ScoreUI = _StatsUI.transform.GetChild(3).GetComponent<TMPro.TextMeshProUGUI>();
             _HealthUI.text = 50.ToString();
             _ScoreUI.text = 0.ToString();
-        }
+            _StatsUI.SetActive(false);
 
+        }
+        private void Update()
+        {
+            if(Input.GetButtonDown("Fire1") && GameState.instance.State == GameStateType.STOP)
+            {
+                Time.timeScale = 1;
+                GameState.instance.State = GameStateType.PLAY;
+                StartGameUIChange();
+            }
+            
+        }
         public void ChangeHealth(int max, int current)
         {
             _HealthUI.text = current.ToString();
@@ -37,6 +52,18 @@ namespace Assets.Scripts
         public void ChangeScore(int score)
         {
             _ScoreUI.text = score.ToString();
+        }
+
+        public void StartGameUIChange()
+        {
+            _StartUI.SetActive(false);
+            _StatsUI.SetActive(true);
+        }
+
+        public void PauseUIChange()
+        {
+            _StartUI.SetActive(true);
+            _StatsUI.SetActive(false);
         }
     }
 }
