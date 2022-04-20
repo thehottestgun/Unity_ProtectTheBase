@@ -1,3 +1,4 @@
+using Assets.Scripts;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,8 +8,13 @@ using UnityEngine.SceneManagement;
 [Serializable]
 public class PlayerData
 {
+    public delegate void OnHealthChange(int maxHealth,int health);
+    public delegate void OnScoreChange(int score);
+    public static event OnHealthChange onHealthChange;
+    public static event OnScoreChange onScoreChange;
+
     public int health, maxHealth, healthCap;
-    public int armour, maxArmour;
+    public int armour, maxArmour, score;
     
     private static PlayerData _instance;
     public static PlayerData instance
@@ -31,12 +37,21 @@ public class PlayerData
         this.healthCap = 200;
         this.armour = 0;
         this.maxArmour = 25;
+        this.score = 0;
     }
 
     public void TakeDamage(int damage)
     {
         this.health -= damage;
+        onHealthChange?.Invoke(this.maxHealth,this.health);
+        /*_controller.ChangeHealth(this.maxHealth,this.health);*/
         if (this.health <= 0) SceneManager.LoadScene(0);
-        Debug.Log(this.health);
+        
+    }
+    public void AddScore()
+    {
+        this.score += 1;
+        onScoreChange?.Invoke(this.score);
+       /*_controller.ChangeScore(this.score);*/
     }
 }
