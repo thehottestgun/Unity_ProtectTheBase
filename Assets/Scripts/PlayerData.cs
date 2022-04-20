@@ -8,15 +8,19 @@ using UnityEngine.SceneManagement;
 [Serializable]
 public class PlayerData
 {
-    public delegate void OnHealthChange(int maxHealth,int health);
+    public delegate void OnHealthChange(int maxHealth, int health);
     public delegate void OnScoreChange(int score);
-    
+    public delegate void OnPointsTresholdReached(int points);
+
     public static event OnHealthChange onHealthChange;
     public static event OnScoreChange onScoreChange;
+    public static event OnPointsTresholdReached onPointsTresholdReached;
 
     public int health, maxHealth, healthCap;
     public int armour, maxArmour, score;
-    
+
+    private List<int> upgrades = new List<int>() { 15,30,45,60};
+
     private static PlayerData _instance;
     public static PlayerData instance
     {
@@ -58,5 +62,6 @@ public class PlayerData
     {
         this.score += 1;
         onScoreChange?.Invoke(this.score);
+        if(upgrades.Contains(this.score)) onPointsTresholdReached?.Invoke(this.score);
     }
 }

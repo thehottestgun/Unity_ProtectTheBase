@@ -11,12 +11,16 @@ namespace Assets.Scripts
     {
         public delegate void OnShoot(Sound sound);
         public static event OnShoot onShootSound;
-        
+        private void OnEnable()
+        {
+            PlayerData.onPointsTresholdReached += UpgradeWeapon;
+        }
+
         private new async void Update()
         {
             base.Update();
             quarter = DetermineQuarter();
-            if(Input.GetButtonDown("Fire1") && _canShoot)
+            if(Input.GetButton("Fire1") && _canShoot)
             {
                 await Shoot();
             }
@@ -32,6 +36,11 @@ namespace Assets.Scripts
             bullet.transform.parent = null;
             await Task.Delay(TimeSpan.FromSeconds(1.0 / SHOOT_RATE));
             _canShoot = true;
+        }
+        private void UpgradeWeapon(int points)
+        {
+            SHOOT_RATE *= 2;
+            gameObject.GetComponent<SpriteRenderer>().color = Color.magenta;
         }
     }
 }
