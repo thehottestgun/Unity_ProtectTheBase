@@ -9,6 +9,9 @@ namespace Assets.Scripts
 {
     public class PlasmaGun : CombatController
     {
+        public delegate void OnShoot(Sound sound);
+        public static event OnShoot onShootSound;
+        
         private new async void Update()
         {
             base.Update();
@@ -21,6 +24,7 @@ namespace Assets.Scripts
 
         private async Task Shoot()
         {
+            onShootSound?.Invoke(Sound.Shoot);
             _canShoot = false;
             var bullet = Instantiate(bulletPrefab, gameObject.transform);
             var velocity = CalculateDirectionalVelocity();

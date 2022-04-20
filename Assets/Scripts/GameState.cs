@@ -30,10 +30,5 @@ namespace Assets.Scripts
 
     
 
-    public enum GameStateType
-    {
-        PAUSE,
-        PLAY,
-        STOP,
-    }
+
 }
