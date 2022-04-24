@@ -86,7 +86,7 @@ public class PlayerData
     {
         this.score += 1;
         onScoreChange?.Invoke(this.score);
-        if(this.score % 20 == 0)
+        if(this.score == 10 || this.score % 20 == 0)
         { 
             onPointsTresholdReached?.Invoke(this.score);
             if(this.score == 20 || this.score == 60 || this.score % 100 == 0)
