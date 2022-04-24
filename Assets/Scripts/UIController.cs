@@ -11,8 +11,7 @@ namespace Assets.Scripts
     public class UIController : MonoBehaviour
     {
         private TMPro.TextMeshProUGUI _HealthUI, _ScoreUI, _ArmourUI;
-        private GameObject _StatsUI, _StartUI, _LevelUpUI;
-
+        private GameObject _StatsUI, _StartUI, _LevelUpUI, _LevelUpUIS;
 
         private void OnEnable()
         {
@@ -28,6 +27,7 @@ namespace Assets.Scripts
             _StatsUI = GameObject.Find("UI").transform.GetChild(0).gameObject;
             _StartUI = GameObject.Find("UI").transform.GetChild(1).gameObject;
             _LevelUpUI = GameObject.Find("UI").transform.GetChild(2).gameObject;
+            _LevelUpUIS = GameObject.Find("UI").transform.GetChild(3).gameObject;
             _HealthUI = _StatsUI.transform.GetChild(1).GetComponent<TMPro.TextMeshProUGUI>();
             _ArmourUI = _StatsUI.transform.GetChild(3).GetComponent<TMPro.TextMeshProUGUI>();
             _ScoreUI = _StatsUI.transform.GetChild(5).GetComponent<TMPro.TextMeshProUGUI>();
@@ -36,6 +36,7 @@ namespace Assets.Scripts
             _ArmourUI.text = 0.ToString();
             _StatsUI.SetActive(false);
             _LevelUpUI.SetActive(false);
+            _LevelUpUIS.SetActive(false);
 
         }
         private void Update()
@@ -51,17 +52,28 @@ namespace Assets.Scripts
 
         void LevelUp(int points)
         {
-            StartCoroutine(LevelUpUi());
+            StartCoroutine(LevelUpUi(points));
         }
 
-        private IEnumerator LevelUpUi()
+        private IEnumerator LevelUpUi(int points)
         {
             GameState.instance.State = GameStateType.PAUSE;
             _LevelUpUI.SetActive(true);
             yield return new WaitForSeconds(2);
+            if(points == 20 || points == 60 || points % 100 == 0)
+            {
+                _LevelUpUI.SetActive(false);
+                _LevelUpUIS.SetActive(true);
+                yield return new WaitForSeconds(2);
+                _LevelUpUIS.SetActive(false);
+            }
+            else
+            {
+                _LevelUpUI.SetActive(false);
+            }
             GameState.instance.State = GameStateType.PLAY;
-            _LevelUpUI.SetActive(false);
-            StopCoroutine(LevelUpUi());
+            
+            StopCoroutine(LevelUpUi(points));
         }
         public void ChangeArmour(int armour)
         {

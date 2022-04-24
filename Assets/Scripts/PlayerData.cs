@@ -21,8 +21,6 @@ public class PlayerData
     public int health, maxHealth, healthCap;
     public int armour, maxArmour, score;
 
-    private List<int> upgrades = new List<int>() { 15,30,45,60};
-
     private static PlayerData _instance;
     public static PlayerData instance
     {
@@ -88,6 +86,16 @@ public class PlayerData
     {
         this.score += 1;
         onScoreChange?.Invoke(this.score);
-        if(upgrades.Contains(this.score)) onPointsTresholdReached?.Invoke(this.score);
+        if(this.score % 20 == 0)
+        { 
+            onPointsTresholdReached?.Invoke(this.score);
+            if(this.score == 20 || this.score == 60 || this.score % 100 == 0)
+                LevelUp();
+        }
+    }
+    void LevelUp()
+    {
+        this.maxHealth += 5;
+        this.maxArmour += 3;
     }
 }
