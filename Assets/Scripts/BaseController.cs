@@ -1,3 +1,4 @@
+using Assets.Scripts;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,18 +14,23 @@ public class BaseController : MonoBehaviour
     private static PlayerData _pd;
     private Rigidbody2D _rb;
     private SpriteRenderer _sr;
+    private TMPro.TextMeshProUGUI _HealthUI;
     #endregion
     void Start()
     {
         _pd = PlayerData.instance;
         _rb = GetComponent<Rigidbody2D>();
         _sr = GetComponent<SpriteRenderer>();
+        _HealthUI = GameObject.Find("UI").transform.GetChild(0).GetChild(1).GetComponent<TMPro.TextMeshProUGUI>();
+        _HealthUI.text = _pd.health.ToString();
+
+        PlayerData.onPointsTresholdReached += LevelUp;
+        GameState.onGameOver += ResetRotateSpeed;
     }
 
 
     void Update()
     {
-
     }
 
     private void FixedUpdate()
@@ -38,5 +44,24 @@ public class BaseController : MonoBehaviour
     {
         if (direction == 0) return;
         this._rb.rotation += direction * ROTATE_SPEED * -1;
+    }
+
+    void LevelUp(int points)
+    {
+        this.ROTATE_SPEED += 0.2f;
+    }
+
+    void ResetRotateSpeed()
+    {
+        ROTATE_SPEED = 4;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            _pd.TakeDamage(3);
+            Destroy(collision.gameObject);
+        }
     }
 }
