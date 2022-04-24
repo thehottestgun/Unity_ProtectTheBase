@@ -26,6 +26,7 @@ namespace Assets.Scripts
             ClearEnemies();
             spawners = GameObject.FindGameObjectsWithTag("Spawner");
 
+            GameState.onGameOver += ResetSpawnRate;
             PlayerData.onPointsTresholdReached += LevelUp;
         }
 
@@ -64,6 +65,10 @@ namespace Assets.Scripts
         void LevelUp(int points)
         {
             SPAWN_RATE += .2f;
+        }
+        void ResetSpawnRate()
+        {
+            SPAWN_RATE = 0.4f;
         }
     }
 }

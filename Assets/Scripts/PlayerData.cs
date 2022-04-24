@@ -12,6 +12,7 @@ public class PlayerData
     public delegate void OnScoreChange(int score);
     public delegate void OnPointsTresholdReached(int points);
     public delegate void OnArmourChange(int armour);
+    public delegate void OnPlayerDeath();
 
     public static event OnHealthChange onHealthChange;
     public static event OnScoreChange onScoreChange;
@@ -37,11 +38,11 @@ public class PlayerData
 
     private void NewPlayerData()
     {
-        this.health = 50;
-        this.maxHealth = 50;
+        this.health = 25;
+        this.maxHealth = 25;
         this.healthCap = 200;
         this.armour = 0;
-        this.maxArmour = 25;
+        this.maxArmour = 15;
         this.score = 0;
     }
 

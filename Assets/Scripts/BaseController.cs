@@ -1,3 +1,4 @@
+using Assets.Scripts;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,6 +25,7 @@ public class BaseController : MonoBehaviour
         _HealthUI.text = _pd.health.ToString();
 
         PlayerData.onPointsTresholdReached += LevelUp;
+        GameState.onGameOver += ResetRotateSpeed;
     }
 
 
@@ -47,6 +49,11 @@ public class BaseController : MonoBehaviour
     void LevelUp(int points)
     {
         this.ROTATE_SPEED += 0.2f;
+    }
+
+    void ResetRotateSpeed()
+    {
+        ROTATE_SPEED = 4;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

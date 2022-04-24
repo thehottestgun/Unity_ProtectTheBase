@@ -14,6 +14,7 @@ namespace Assets.Scripts
         private void OnEnable()
         {
             PlayerData.onPointsTresholdReached += UpgradeWeapon;
+            GameState.onGameOver += ResetWeapon;
         }
 
         private new async void Update()
@@ -41,6 +42,12 @@ namespace Assets.Scripts
         {
             SHOOT_RATE += 0.5f;
             gameObject.GetComponent<SpriteRenderer>().color = Color.magenta;
+        }
+
+        private void ResetWeapon()
+        {
+            SHOOT_RATE = 1;
+            gameObject.GetComponent<SpriteRenderer>().color = Color.blue;
         }
     }
 }
