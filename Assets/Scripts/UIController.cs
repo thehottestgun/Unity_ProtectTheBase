@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,14 +10,16 @@ namespace Assets.Scripts
 {
     public class UIController : MonoBehaviour
     {
-        private TMPro.TextMeshProUGUI _HealthUI, _ScoreUI;
-        private GameObject _StatsUI, _StartUI, _PauseUI;
+        private TMPro.TextMeshProUGUI _HealthUI, _ScoreUI, _ArmourUI;
+        private GameObject _StatsUI, _StartUI, _LevelUpUI;
 
 
         private void OnEnable()
         {
             PlayerData.onHealthChange += ChangeHealth;
             PlayerData.onScoreChange += ChangeScore;
+            PlayerData.onArmourChange += ChangeArmour; 
+            PlayerData.onPointsTresholdReached += LevelUp;
             GameState.onGameOver += PauseUIChange;
         }
 
@@ -24,11 +27,15 @@ namespace Assets.Scripts
         {
             _StatsUI = GameObject.Find("UI").transform.GetChild(0).gameObject;
             _StartUI = GameObject.Find("UI").transform.GetChild(1).gameObject;
+            _LevelUpUI = GameObject.Find("UI").transform.GetChild(2).gameObject;
             _HealthUI = _StatsUI.transform.GetChild(1).GetComponent<TMPro.TextMeshProUGUI>();
-            _ScoreUI = _StatsUI.transform.GetChild(3).GetComponent<TMPro.TextMeshProUGUI>();
-            _HealthUI.text = 50.ToString();
+            _ArmourUI = _StatsUI.transform.GetChild(3).GetComponent<TMPro.TextMeshProUGUI>();
+            _ScoreUI = _StatsUI.transform.GetChild(5).GetComponent<TMPro.TextMeshProUGUI>();
+            _HealthUI.text = PlayerData.instance.maxHealth.ToString();
             _ScoreUI.text = 0.ToString();
+            _ArmourUI.text = 0.ToString();
             _StatsUI.SetActive(false);
+            _LevelUpUI.SetActive(false);
 
         }
         private void Update()
@@ -40,6 +47,25 @@ namespace Assets.Scripts
                 StartGameUIChange();
             }
             
+        }
+
+        void LevelUp(int points)
+        {
+            StartCoroutine(LevelUpUi());
+        }
+
+        private IEnumerator LevelUpUi()
+        {
+            GameState.instance.State = GameStateType.PAUSE;
+            _LevelUpUI.SetActive(true);
+            yield return new WaitForSeconds(2);
+            GameState.instance.State = GameStateType.PLAY;
+            _LevelUpUI.SetActive(false);
+            StopCoroutine(LevelUpUi());
+        }
+        public void ChangeArmour(int armour)
+        {
+            _ArmourUI.text = armour.ToString();
         }
         public void ChangeHealth(int max, int current)
         {

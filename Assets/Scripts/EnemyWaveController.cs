@@ -9,7 +9,7 @@ namespace Assets.Scripts
 {
     public class EnemyWaveController : MonoBehaviour
     {
-        public int SPAWN_RATE;
+        public float SPAWN_RATE;
         public float MOVEMENT_SPEED;
     }
 }

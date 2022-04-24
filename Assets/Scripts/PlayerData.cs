@@ -11,10 +11,12 @@ public class PlayerData
     public delegate void OnHealthChange(int maxHealth, int health);
     public delegate void OnScoreChange(int score);
     public delegate void OnPointsTresholdReached(int points);
+    public delegate void OnArmourChange(int armour);
 
     public static event OnHealthChange onHealthChange;
     public static event OnScoreChange onScoreChange;
     public static event OnPointsTresholdReached onPointsTresholdReached;
+    public static event OnArmourChange onArmourChange;
 
     public int health, maxHealth, healthCap;
     public int armour, maxArmour, score;
@@ -47,6 +49,14 @@ public class PlayerData
 
     public void TakeDamage(int damage)
     {
+        if(this.armour > 0)
+        {
+            var tmp = this.armour;
+            this.armour -= damage < armour ? damage : armour;
+            damage -= tmp;
+            onArmourChange?.Invoke(this.armour);
+            if (damage <= 0) return;
+        }
         this.health -= damage;
         onHealthChange?.Invoke(this.maxHealth,this.health);
         if (this.health <= 0)
@@ -58,6 +68,22 @@ public class PlayerData
         }
         
     }
+
+    public void Heal(int heal)
+    {
+        if (this.health == this.maxHealth) return;
+        this.health += this.health + heal > this.maxHealth ? this.maxHealth-this.health : heal;
+        onHealthChange?.Invoke(this.maxHealth, this.health);
+    }
+
+    public void ArmourUp(int armour)
+    {
+        if (this.armour == this.maxArmour) return;
+        Debug.Log("armour added");
+        this.armour += this.armour + armour > this.maxArmour ? this.maxArmour - this.armour : armour;
+        onArmourChange?.Invoke(this.armour);
+    }
+
     public void AddScore()
     {
         this.score += 1;

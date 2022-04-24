@@ -25,6 +25,8 @@ namespace Assets.Scripts
             GameState.onGameOver += ClearEnemies;
             ClearEnemies();
             spawners = GameObject.FindGameObjectsWithTag("Spawner");
+
+            PlayerData.onPointsTresholdReached += LevelUp;
         }
 
         void ClearEnemies()
@@ -57,6 +59,11 @@ namespace Assets.Scripts
         private void AttackBase(GameObject enemy)
         {
             enemy.GetComponent<Rigidbody2D>().velocity = _toPlayerVelocity*MOVEMENT_SPEED;
+        }
+
+        void LevelUp(int points)
+        {
+            SPAWN_RATE += .2f;
         }
     }
 }

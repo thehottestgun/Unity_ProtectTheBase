@@ -18,4 +18,9 @@ namespace Assets.Scripts
         PLAY,
         STOP,
     }
+    public enum PickUpType
+    {
+        Health,
+        Armour
+    }
 }

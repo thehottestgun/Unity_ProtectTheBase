@@ -8,6 +8,10 @@ public class EnemyLogic : MonoBehaviour
     private PlayerData _playerData;
     public delegate void OnEnemyDeath(Sound sound);
     public static event OnEnemyDeath onEnemyDeath;
+    private GameObject health, armour;
+
+    public delegate void OnItemCanSpawn(Vector3 loc, Vector3 vel);
+    public static event OnItemCanSpawn onItemCanSpawn; 
     private void Start()
     {
         _playerData = PlayerData.instance;
@@ -19,9 +23,11 @@ public class EnemyLogic : MonoBehaviour
         {
             _playerData.AddScore();
             onEnemyDeath?.Invoke(Sound.EnemyDie);
+            onItemCanSpawn?.Invoke(gameObject.transform.position,gameObject.GetComponent<Rigidbody2D>().velocity);
             Destroy(gameObject);
-            Destroy(collision.gameObject);
+            
         }
         
     }
+
 }

@@ -39,7 +39,7 @@ namespace Assets.Scripts
         }
         private void UpgradeWeapon(int points)
         {
-            SHOOT_RATE *= 2;
+            SHOOT_RATE += 0.5f;
             gameObject.GetComponent<SpriteRenderer>().color = Color.magenta;
         }
     }
